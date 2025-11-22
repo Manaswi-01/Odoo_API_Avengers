@@ -8,6 +8,8 @@ import Operations from "./pages/Operations";
 import Stocks from "./pages/Stocks";
 import MoveHistory from "./pages/MoveHistory";
 import Settings from "./pages/Settings";
+import Location from "./pages/Location";
+import Warehouse from "./pages/Warehouse";
 import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
               <Route path="/stocks" element={<Stocks />} />
               <Route path="/move-history" element={<MoveHistory />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/location" element={<Location />} />
+              <Route path="/warehouse" element={<Warehouse />} />
               <Route path="/" element={<Dashboard />} />
 
 

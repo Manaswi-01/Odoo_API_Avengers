@@ -32,6 +32,7 @@
 .navbar-links {
   display: flex;
   gap: 2rem;
+  align-items: center;
 }
 
 .nav-link {
@@ -42,7 +43,8 @@
   position: relative;
 }
 
-.nav-link:hover, .nav-link.active {
+.nav-link:hover,
+.nav-link.active {
   color: var(--text-primary);
 }
 
@@ -106,7 +108,8 @@
 
 /* Light Mode State (Sun-like) */
 .toggle-icon.light .shape-center {
-  background-color: #f59e0b; /* Amber */
+  background-color: #f59e0b;
+  /* Amber */
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
 }
 
@@ -122,7 +125,8 @@
   width: 16px;
   height: 16px;
   background-color: transparent;
-  box-shadow: inset -6px -4px 0 0 #e2e8f0; /* Slate 200 */
+  box-shadow: inset -6px -4px 0 0 #e2e8f0;
+  /* Slate 200 */
   border-radius: 50%;
   transform: rotate(-45deg);
 }
@@ -130,4 +134,77 @@
 .toggle-icon.dark .shape-rays {
   opacity: 0;
   transform: scale(0.5) rotate(-180deg);
+}
+
+/* Dropdown Styles */
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.dropdown-arrow {
+  font-size: 0.7rem;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background-color: var(--navbar-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  min-width: 160px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: dropdownSlideIn 0.2s ease-out;
+  z-index: 1001;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background-color: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.dropdown-item:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
 }
