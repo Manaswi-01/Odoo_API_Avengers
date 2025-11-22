@@ -5,11 +5,15 @@ const {
     getProduct,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    setReorderRules
 } = require('../controllers/productController');
 const { protect } = require('../middleware/authMiddleware');
+const { requireManager } = require('../middleware/roleMiddleware');
 
-router.route('/').get(protect, getProducts).post(protect, createProduct);
-router.route('/:id').get(protect, getProduct).put(protect, updateProduct).delete(protect, deleteProduct);
+// All routes require authentication
+router.route('/').get(protect, getProducts).post(protect, requireManager, createProduct);
+router.route('/:id').get(protect, getProduct).put(protect, requireManager, updateProduct).delete(protect, requireManager, deleteProduct);
+router.put('/:id/reorder', protect, requireManager, setReorderRules);
 
 module.exports = router;

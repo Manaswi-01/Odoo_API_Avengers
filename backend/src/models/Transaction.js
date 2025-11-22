@@ -10,6 +10,10 @@ const transactionLineSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    doneQuantity: {
+        type: Number,
+        default: 0
+    },
     locationFrom: {
         type: String // Optional, depending on transaction type
     },
@@ -34,7 +38,7 @@ const transactionSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Draft', 'Validated', 'Done', 'Cancelled'],
+        enum: ['Draft', 'Counting', 'Waiting', 'Ready', 'Picking', 'Packed', 'Validated', 'Pending Approval', 'Done', 'Cancelled'],
         default: 'Draft'
     },
     warehouseId: {
@@ -42,10 +46,25 @@ const transactionSchema = new mongoose.Schema({
         ref: 'Warehouse',
         required: true
     },
+    partnerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Partner'
+    },
     lines: [transactionLineSchema],
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    validatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    validatedAt: {
+        type: Date
+    },
+    notes: {
+        type: String,
+        default: ''
     },
     meta: {
         type: Map,

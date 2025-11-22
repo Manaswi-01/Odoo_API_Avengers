@@ -29,14 +29,14 @@ const Login = () => {
 
     try {
       const response = await authAPI.login(formData.email, formData.password);
-      
+
       // Store user data and token
       const userData = {
         _id: response._id,
         name: response.name,
         email: response.email
       };
-      
+
       login(userData, response.token);
       navigate("/dashboard");
     } catch (err) {
@@ -47,78 +47,113 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <Navbar />
-      <div className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-[var(--text-primary)]">
-              Sign in to your account
-            </h2>
-          </div>
-          
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-              {error}
+
+      <div className="flex-grow flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-xl">
+          {/* Card Container */}
+          <div className="card card-padding-lg animate-scale-in">
+            {/* Header */}
+            <div className="text-center mb-10">
+              <h1 className="heading-1 mb-3">Welcome Back</h1>
+              <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+                Sign in to your account to continue
+              </p>
             </div>
-          )}
-          
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="rounded-md shadow-sm -space-y-px">
+
+            {/* Error Message */}
+            {error && (
+              <div className="mb-6 px-6 py-4 rounded-xl border-2 animate-fade-in"
+                style={{
+                  backgroundColor: 'var(--error-light)',
+                  borderColor: 'var(--error)',
+                  color: 'var(--error-dark)'
+                }}>
+                <div className="flex items-center gap-3">
+                  <span className="text-xl">⚠️</span>
+                  <span className="font-medium">{error}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
+                <label className="block text-sm font-semibold mb-3"
+                  style={{ color: 'var(--text-secondary)' }}>
+                  Email Address
+                </label>
                 <input
                   name="email"
                   type="email"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-[var(--border-color)] placeholder-gray-500 text-[var(--text-primary)] bg-[var(--bg-secondary)] rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Email address"
+                  className="input"
+                  placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleChange}
                 />
               </div>
+
               <div>
+                <label className="block text-sm font-semibold mb-3"
+                  style={{ color: 'var(--text-secondary)' }}>
+                  Password
+                </label>
                 <input
                   name="password"
                   type="password"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-[var(--border-color)] placeholder-gray-500 text-[var(--text-primary)] bg-[var(--bg-secondary)] rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Password"
+                  className="input"
+                  placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
                 />
               </div>
-            </div>
 
-            <div className="flex items-center justify-between">
-              <div className="text-sm">
+              <div className="flex items-center justify-end">
                 <Link
                   to="/forgot-password"
-                  className="font-medium text-indigo-600 hover:text-indigo-500 transition"
+                  className="text-sm font-semibold transition-colors"
+                  style={{ color: 'var(--primary-600)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-700)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'var(--primary-600)'}
                 >
-                  Forgot your password?
+                  Forgot password?
                 </Link>
               </div>
-            </div>
 
-            <div>
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-primary w-full"
               >
-                {loading ? "Signing in..." : "Sign in"}
+                {loading ? (
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="spinner" style={{ width: '20px', height: '20px', borderWidth: '2px' }}></div>
+                    <span>Signing in...</span>
+                  </div>
+                ) : (
+                  <span>Sign In</span>
+                )}
               </button>
-            </div>
 
-            <div className="text-center">
-              <Link
-                to="/signup"
-                className="font-medium text-indigo-600 hover:text-indigo-500 transition"
-              >
-                Don't have an account? Sign up
-              </Link>
-            </div>
-          </form>
+              <div className="text-center pt-4">
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  Don't have an account?{' '}
+                  <Link
+                    to="/signup"
+                    className="font-bold transition-colors"
+                    style={{ color: 'var(--primary-600)' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-700)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--primary-600)'}
+                  >
+                    Sign up
+                  </Link>
+                </p>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -126,3 +161,4 @@ const Login = () => {
 };
 
 export default Login;
+

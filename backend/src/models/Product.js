@@ -14,17 +14,29 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String,
+        default: ''
+    },
     unit: {
         type: String,
         required: true
     },
+    vendor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Partner'
+    },
+    imageUrl: {
+        type: String,
+        default: ''
+    },
     reorderPoint: {
         type: Number,
-        default: 0
+        default: 10
     },
     reorderQty: {
         type: Number,
-        default: 0
+        default: 50
     },
     attributes: {
         type: Map,

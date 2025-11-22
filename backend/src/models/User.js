@@ -16,6 +16,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    role: {
+        type: String,
+        enum: ['Manager', 'Staff'],
+        default: 'Manager'
+    },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
     otp: {
         code: String,
         expires: Date

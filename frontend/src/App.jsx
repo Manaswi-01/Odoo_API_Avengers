@@ -14,8 +14,11 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ReceiptList from './pages/ReceiptList';
+import ReceiptDetail from './pages/ReceiptDetail';
 import DeliveryList from './pages/DeliveryList';
+import DeliveryDetail from './pages/DeliveryDetail';
 import NewReceipt from './pages/NewReceipt';
+import UserManagement from './pages/UserManagement';
 
 function App() {
   return (
@@ -29,7 +32,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/forgot-password" element={<ForgetPassword />} />
-                
+
                 {/* Protected Routes */}
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -39,11 +42,12 @@ function App() {
                 <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
                 <Route path="/location" element={<ProtectedRoute><Location /></ProtectedRoute>} />
                 <Route path="/warehouse" element={<ProtectedRoute><Warehouse /></ProtectedRoute>} />
+                <Route path="/users" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} />
                 <Route path="/operations/receipt" element={<ProtectedRoute><ReceiptList /></ProtectedRoute>} />
                 <Route path="/operations/receipt/new" element={<ProtectedRoute><NewReceipt /></ProtectedRoute>} />
-                <Route path="/operations/receipt/:id" element={<ProtectedRoute><ReceiptList /></ProtectedRoute>} />
+                <Route path="/operations/receipt/:id" element={<ProtectedRoute><ReceiptDetail /></ProtectedRoute>} />
                 <Route path="/operations/delivery" element={<ProtectedRoute><DeliveryList /></ProtectedRoute>} />
-                <Route path="/operations/delivery/:id" element={<ProtectedRoute><DeliveryList /></ProtectedRoute>} />
+                <Route path="/operations/delivery/:id" element={<ProtectedRoute><DeliveryDetail /></ProtectedRoute>} />
               </Routes>
             </main>
           </div>

@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 const sendEmail = require('../utils/sendEmail');
 
 // Generate JWT
-const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
+const generateToken = (id, role) => {
+    return jwt.sign({ id, role }, process.env.JWT_SECRET, {
         expiresIn: '30d'
     });
 };
@@ -15,7 +15,7 @@ const generateToken = (id) => {
 // @access  Public
 const signup = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
 
         if (!name || !email || !password) {
             return res.status(400).json({ message: 'Please add all fields' });
@@ -32,11 +32,12 @@ const signup = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create user
+        // Create user with role (defaults to Manager if not provided)
         const user = await User.create({
             name,
             email,
-            passwordHash: hashedPassword
+            passwordHash: hashedPassword,
+            role: role || 'Manager'
         });
 
         if (user) {
@@ -44,7 +45,8 @@ const signup = async (req, res) => {
                 _id: user.id,
                 name: user.name,
                 email: user.email,
-                token: generateToken(user._id)
+                role: user.role,
+                token: generateToken(user._id, user.role)
             });
         } else {
             res.status(400).json({ message: 'Invalid user data' });
@@ -65,11 +67,17 @@ const login = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (user && (await bcrypt.compare(password, user.passwordHash))) {
+            // Check if user is active
+            if (!user.isActive) {
+                return res.status(403).json({ message: 'Account is deactivated. Please contact administrator.' });
+            }
+
             res.json({
                 _id: user.id,
                 name: user.name,
                 email: user.email,
-                token: generateToken(user._id)
+                role: user.role,
+                token: generateToken(user._id, user.role)
             });
         } else {
             res.status(400).json({ message: 'Invalid credentials' });

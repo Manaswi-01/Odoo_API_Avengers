@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     // Check if user is logged in on mount
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
-    
+
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
@@ -48,7 +48,9 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     loading,
-    isAuthenticated: !!token
+    isAuthenticated: !!token,
+    isManager: user?.role === 'Manager',
+    isStaff: user?.role === 'Staff'
   };
 
   return (
