@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { authAPI } from "../services/api";
+import logo from "../assets/logo.png";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -57,6 +58,7 @@ const Login = () => {
           <div className="card card-padding-lg animate-scale-in">
             {/* Header */}
             <div className="text-center mb-10">
+              <img src={logo} alt="Logo" className="h-32 mx-auto mb-4" />
               <h1 className="heading-1 mb-3">Welcome Back</h1>
               <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
                 Sign in to your account to continue

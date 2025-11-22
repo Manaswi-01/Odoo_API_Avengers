@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authAPI } from "../services/api";
+import logo from "../assets/logo.png";
 
 const ForgetPassword = () => {
   const [step, setStep] = useState(1); // 1: email, 2: OTP & new password
@@ -69,6 +70,7 @@ const ForgetPassword = () => {
           <div className="card card-padding-lg animate-scale-in">
             {/* Header */}
             <div className="text-center mb-10">
+              <img src={logo} alt="Logo" className="h-32 mx-auto mb-4" />
               <h1 className="heading-1 mb-3">Reset Password</h1>
               <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
                 {step === 1
@@ -80,16 +82,16 @@ const ForgetPassword = () => {
             {/* Step Indicator */}
             <div className="flex items-center justify-center gap-3 mb-8">
               <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold transition-all duration-300 ${step === 1
-                  ? 'bg-gradient-primary text-white scale-110'
-                  : 'text-white'
+                ? 'bg-gradient-primary text-white scale-110'
+                : 'text-white'
                 }`} style={{ backgroundColor: step >= 1 ? 'var(--primary-600)' : 'var(--border-color)' }}>
                 1
               </div>
               <div className="w-16 h-1 rounded-full transition-all duration-300"
                 style={{ backgroundColor: step === 2 ? 'var(--primary-600)' : 'var(--border-color)' }}></div>
               <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold transition-all duration-300 ${step === 2
-                  ? 'bg-gradient-primary text-white scale-110'
-                  : ''
+                ? 'bg-gradient-primary text-white scale-110'
+                : ''
                 }`} style={{
                   backgroundColor: step === 2 ? 'var(--primary-600)' : 'var(--border-color)',
                   color: step === 2 ? 'white' : 'var(--text-tertiary)'

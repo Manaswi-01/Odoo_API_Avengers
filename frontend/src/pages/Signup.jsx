@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { authAPI } from "../services/api";
+import logo from "../assets/logo.png";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -72,6 +73,7 @@ const Signup = () => {
           <div className="card card-padding-lg animate-scale-in">
             {/* Header */}
             <div className="text-center mb-10">
+              <img src={logo} alt="Logo" className="h-32 mx-auto mb-4" />
               <h1 className="heading-1 mb-3">Create Account</h1>
               <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
                 Join us and start managing your inventory
