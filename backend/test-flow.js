@@ -46,6 +46,24 @@ const runTest = async () => {
         const productId = productRes.data._id;
         console.log('✅ Product Created:', productId);
 
+        // 3.5 Create Partners
+        console.log('\n3.5. Testing Create Partners...');
+        const supplierRes = await axios.post(`${API_URL}/partners`, {
+            type: 'Supplier',
+            name: 'Acme Steel Co.',
+            contact: 'contact@acmesteel.com',
+            code: `SUP_${Date.now()}`
+        }, { headers });
+        console.log('✅ Supplier Created:', supplierRes.data._id);
+
+        const customerRes = await axios.post(`${API_URL}/partners`, {
+            type: 'Customer',
+            name: 'BuildIt Construction',
+            contact: 'orders@buildit.com',
+            code: `CUS_${Date.now()}`
+        }, { headers });
+        console.log('✅ Customer Created:', customerRes.data._id);
+
         // 4. Create Receipt Transaction (Draft)
         console.log('\n4. Testing Create Receipt (Draft)...');
         const receiptRes = await axios.post(`${API_URL}/transactions`, {
