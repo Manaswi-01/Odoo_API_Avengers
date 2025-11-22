@@ -1,0 +1,12 @@
+# .gitignore
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+venv/
+
+# Database (CRITICAL)
+db.sqlite3
+
+# Environment variables (for security later)
+.env
