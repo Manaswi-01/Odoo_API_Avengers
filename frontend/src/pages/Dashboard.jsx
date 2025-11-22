@@ -50,7 +50,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
       <Navbar />
-      
+
       <div className="container-main section-spacing">
         {/* Header */}
         <div className="page-header flex items-start justify-between">
@@ -60,7 +60,7 @@ const Dashboard = () => {
               Welcome back, {user?.name}. Here's your inventory overview.
             </p>
           </div>
-          <button 
+          <button
             onClick={fetchDashboardData}
             className="btn btn-secondary"
             disabled={loading}
@@ -86,17 +86,21 @@ const Dashboard = () => {
           <>
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="stat-card">
-                <div className="stat-label">Total Products</div>
-                <div className="stat-value">{stats.totalProducts}</div>
-                <div className="stat-description">Products in catalog</div>
-              </div>
+              {user?.role === 'Manager' && (
+                <>
+                  <div className="stat-card">
+                    <div className="stat-label">Total Products</div>
+                    <div className="stat-value">{stats.totalProducts}</div>
+                    <div className="stat-description">Products in catalog</div>
+                  </div>
 
-              <div className="stat-card">
-                <div className="stat-label">Low Stock Items</div>
-                <div className="stat-value text-orange-600">{stats.lowStockCount}</div>
-                <div className="stat-description">Need reordering</div>
-              </div>
+                  <div className="stat-card">
+                    <div className="stat-label">Low Stock Items</div>
+                    <div className="stat-value text-orange-600">{stats.lowStockCount}</div>
+                    <div className="stat-description">Need reordering</div>
+                  </div>
+                </>
+              )}
 
               <div className="stat-card">
                 <div className="stat-label">Pending Receipts</div>

@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { stockAPI } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 const MoveHistory = () => {
   const [moveHistory, setMoveHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
+  const { isManager } = useAuth();
 
   useEffect(() => {
     fetchMoveHistory();
@@ -56,7 +58,7 @@ const MoveHistory = () => {
                   <option value="Transfer">Transfers</option>
                   <option value="Adjustment">Adjustments</option>
                 </select>
-                <button 
+                <button
                   onClick={fetchMoveHistory}
                   className="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition"
                 >
@@ -94,7 +96,7 @@ const MoveHistory = () => {
                       <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Warehouse</th>
                       <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Location</th>
                       <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Change</th>
-                      <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Balance</th>
+                      {isManager && <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Balance</th>}
                       <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">User</th>
                       <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Note</th>
                     </tr>
@@ -125,9 +127,11 @@ const MoveHistory = () => {
                         <td className={`py-3 px-4 border-b border-[var(--border-color)] font-semibold ${move.qtyChange > 0 ? 'text-green-600' : 'text-red-600'}`}>
                           {move.qtyChange > 0 ? '+' : ''}{move.qtyChange}
                         </td>
-                        <td className="py-3 px-4 border-b border-[var(--border-color)] font-semibold">
-                          {move.balanceAfter}
-                        </td>
+                        {isManager && (
+                          <td className="py-3 px-4 border-b border-[var(--border-color)] font-semibold">
+                            {move.balanceAfter}
+                          </td>
+                        )}
                         <td className="py-3 px-4 border-b border-[var(--border-color)]">
                           {move.userId?.name || 'System'}
                         </td>

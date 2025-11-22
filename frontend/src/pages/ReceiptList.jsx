@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { transactionsAPI } from '../services/api';
 
 const ReceiptList = () => {
+  const navigate = useNavigate();
   const [receipts, setReceipts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,93 +30,154 @@ const ReceiptList = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Done': return 'bg-green-100 text-green-800';
-      case 'Draft': return 'bg-gray-100 text-gray-800';
-      case 'Validated': return 'bg-blue-100 text-blue-800';
-      case 'Cancelled': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'Done': return 'badge-success';
+      case 'Draft': return 'badge-neutral';
+      case 'Counting': return 'badge-warning';
+      case 'Validated': return 'badge-info';
+      case 'Cancelled': return 'badge-danger';
+      default: return 'badge-neutral';
     }
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <div className="min-h-screen bg-[var(--bg-primary)]">
       <Navbar />
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="border-4 border-dashed border-[var(--border-color)] rounded-lg p-8">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Receipts (Incoming Stock)</h2>
-              <Link to="/operations/receipt/new">
-                <button className="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition">
-                  New Receipt
+
+      <div className="container-main section-spacing">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div>
+            <h1 className="page-title">Receipts</h1>
+            <p className="page-description">Manage incoming stock and inventory receipts</p>
+          </div>
+          <Link to="/operations/receipt/new">
+            <button className="btn btn-primary">
+              <span>+</span>
+              New Receipt
+            </button>
+          </Link>
+        </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="card card-padding text-center py-16 animate-pulse-slow">
+            <div className="spinner mx-auto mb-4"></div>
+            <p className="text-[var(--text-secondary)] text-lg">Loading receipts...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="card card-padding-sm bg-red-50 border-l-4 border-red-500 animate-slide-in">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">⚠️</span>
+              <div>
+                <p className="font-semibold text-red-800">Error Loading Receipts</p>
+                <p className="text-sm text-red-700 mt-1">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && receipts.length === 0 && (
+          <div className="card card-padding animate-fade-in">
+            <div className="empty-state">
+              <div className="empty-state-icon">📦</div>
+              <div className="empty-state-title">No Receipts Found</div>
+              <p className="empty-state-description">
+                Create your first receipt to start tracking incoming inventory
+              </p>
+              <Link to="/operations/receipt/new" className="mt-6 inline-block">
+                <button className="btn btn-primary">
+                  <span>+</span>
+                  Create First Receipt
                 </button>
               </Link>
             </div>
-
-            {loading && (
-              <div className="text-center py-8">
-                <div className="text-xl text-[var(--text-secondary)]">Loading receipts...</div>
-              </div>
-            )}
-
-            {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                Error loading receipts: {error}
-              </div>
-            )}
-
-            {!loading && !error && receipts.length === 0 && (
-              <div className="text-center py-8 text-[var(--text-secondary)]">
-                No receipts found. Create your first receipt to get started.
-              </div>
-            )}
-
-            {!loading && !error && receipts.length > 0 && (
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg overflow-hidden">
-                  <thead className="bg-[var(--bg-primary)]">
-                    <tr>
-                      <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Ref No</th>
-                      <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Warehouse</th>
-                      <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Status</th>
-                      <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Items</th>
-                      <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Created</th>
-                      <th className="py-3 px-4 border-b border-[var(--border-color)] text-left text-[var(--text-secondary)]">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {receipts.map((receipt) => (
-                      <tr key={receipt._id} className="hover:bg-[var(--hover-bg)] transition">
-                        <td className="py-3 px-4 border-b border-[var(--border-color)] font-medium">
-                          {receipt.refNo}
-                        </td>
-                        <td className="py-3 px-4 border-b border-[var(--border-color)]">
-                          {receipt.warehouseId?.name || 'N/A'}
-                        </td>
-                        <td className="py-3 px-4 border-b border-[var(--border-color)]">
-                          <span className={`px-2 py-1 rounded-full text-xs ${getStatusColor(receipt.status)}`}>
-                            {receipt.status}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 border-b border-[var(--border-color)]">
-                          {receipt.lines?.length || 0} items
-                        </td>
-                        <td className="py-3 px-4 border-b border-[var(--border-color)]">
-                          {new Date(receipt.createdAt).toLocaleDateString()}
-                        </td>
-                        <td className="py-3 px-4 border-b border-[var(--border-color)]">
-                          <button className="text-indigo-600 hover:text-indigo-400 transition">
-                            View
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
           </div>
-        </div>
+        )}
+
+        {/* Receipts Table */}
+        {!loading && !error && receipts.length > 0 && (
+          <div className="card card-padding animate-fade-in">
+            <div className="overflow-x-auto -mx-8">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Reference</th>
+                    <th>Warehouse</th>
+                    <th>Status</th>
+                    <th>Items</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {receipts.map((receipt) => (
+                    <tr key={receipt._id}>
+                      <td>
+                        <div className="font-semibold text-[var(--text-primary)]">
+                          {receipt.refNo}
+                        </div>
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">🏢</span>
+                          <span>{receipt.warehouseId?.name || 'N/A'}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`badge ${getStatusColor(receipt.status)}`}>
+                          {receipt.status}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">📋</span>
+                          <span className="font-medium">{receipt.lines?.length || 0}</span>
+                          <span className="text-[var(--text-tertiary)] text-sm">items</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="text-sm">
+                          {new Date(receipt.createdAt).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </div>
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => navigate(`/operations/receipt/${receipt._id}`)}
+                          className="btn btn-sm btn-ghost text-[var(--primary-600)] hover:text-[var(--primary-700)]"
+                        >
+                          View Details →
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Summary Footer */}
+            <div className="mt-6 pt-6 border-t border-[var(--border-color)]">
+              <div className="flex items-center justify-between text-sm">
+                <p className="text-[var(--text-secondary)]">
+                  Showing <span className="font-semibold text-[var(--text-primary)]">{receipts.length}</span> receipt{receipts.length !== 1 ? 's' : ''}
+                </p>
+                <button
+                  onClick={fetchReceipts}
+                  className="btn btn-sm btn-ghost"
+                >
+                  🔄 Refresh
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

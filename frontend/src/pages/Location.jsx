@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 import { warehousesAPI } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 const Location = () => {
   const [locations, setLocations] = useState([]);
@@ -14,16 +15,23 @@ const Location = () => {
     warehouseId: "",
   });
 
+  const { isManager } = useAuth();
+
   useEffect(() => {
+    if (!isManager) {
+      setError("Access denied. Manager role required.");
+      setLoading(false);
+      return;
+    }
     fetchWarehouses();
-  }, []);
+  }, [isManager]);
 
   const fetchWarehouses = async () => {
     try {
       setLoading(true);
       const data = await warehousesAPI.getAll();
       setWarehouses(data);
-      
+
       // Extract all locations from all warehouses
       const allLocations = [];
       data.forEach(warehouse => {
@@ -56,7 +64,7 @@ const Location = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const selectedWarehouse = warehouses.find(wh => wh._id === formData.warehouseId);
       if (!selectedWarehouse) {
@@ -72,7 +80,7 @@ const Location = () => {
       };
 
       const updatedLocations = [...(selectedWarehouse.locations || []), newLocation];
-      
+
       await warehousesAPI.update(formData.warehouseId, {
         ...selectedWarehouse,
         locations: updatedLocations
@@ -88,13 +96,13 @@ const Location = () => {
 
   const handleDelete = async (warehouseId, locationId) => {
     if (!window.confirm("Are you sure you want to delete this location?")) return;
-    
+
     try {
       const warehouse = warehouses.find(wh => wh._id === warehouseId);
       if (!warehouse) return;
 
       const updatedLocations = warehouse.locations.filter(loc => loc.locationId !== locationId);
-      
+
       await warehousesAPI.update(warehouseId, {
         ...warehouse,
         locations: updatedLocations
@@ -106,6 +114,23 @@ const Location = () => {
       setError(err.message || "Failed to delete location");
     }
   };
+
+  if (!isManager) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-primary)]">
+        <Navbar />
+        <div className="container-main section-spacing">
+          <div className="empty-state">
+            <div className="empty-state-icon">🔒</div>
+            <div className="empty-state-title">Access Denied</div>
+            <div className="empty-state-description">
+              Manager role required to access location settings
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -204,7 +229,7 @@ const Location = () => {
               {/* Location List */}
               <div className="bg-[var(--bg-secondary)] p-6 rounded-lg shadow border border-[var(--border-color)]">
                 <h3 className="text-lg font-medium mb-4 text-[var(--text-secondary)]">Location List</h3>
-                
+
                 {loading ? (
                   <p className="text-[var(--text-secondary)] text-center py-4">Loading locations...</p>
                 ) : locations.length === 0 ? (

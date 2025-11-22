@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
-import './Navbar.css'; // We'll create this for specific animations
+import './Navbar.css';
 
 const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
@@ -46,13 +46,13 @@ const Navbar = () => {
     const toggleSettingsDropdown = (e) => {
         e.preventDefault();
         setIsSettingsOpen(!isSettingsOpen);
-        if (!isSettingsOpen) setIsOperationsOpen(false); // ensure only one open
+        if (!isSettingsOpen) setIsOperationsOpen(false);
     };
 
     const toggleOperationsDropdown = (e) => {
         e.preventDefault();
         setIsOperationsOpen(!isOperationsOpen);
-        if (!isOperationsOpen) setIsSettingsOpen(false); // ensure only one open
+        if (!isOperationsOpen) setIsSettingsOpen(false);
     };
 
     const closeSettingsDropdown = () => setIsSettingsOpen(false);
@@ -68,7 +68,7 @@ const Navbar = () => {
                 <div className="navbar-links">
                     <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>Dashboard</Link>
 
-                    {/* Operations Dropdown (matches Settings style) */}
+                    {/* Operations Dropdown */}
                     <div className="nav-dropdown" ref={operationsRef}>
                         <button
                             className={`nav-link dropdown-toggle ${isActive('/operations') || isActive('/operations/receipt') || isActive('/operations/delivery') ? 'active' : ''}`}
@@ -92,10 +92,10 @@ const Navbar = () => {
                     <Link to="/stocks" className={`nav-link ${isActive('/stocks') ? 'active' : ''}`}>Stocks</Link>
                     <Link to="/move-history" className={`nav-link ${isActive('/move-history') ? 'active' : ''}`}>History</Link>
 
-                    {/* Settings Dropdown */}
+                    {/* Settings Dropdown - ONLY Location and Warehouse */}
                     <div className="nav-dropdown" ref={settingsRef}>
                         <button
-                            className={`nav-link dropdown-toggle ${isActive('/settings') || isActive('/location') || isActive('/warehouse') ? 'active' : ''}`}
+                            className={`nav-link dropdown-toggle ${isActive('/location') || isActive('/warehouse') ? 'active' : ''}`}
                             onClick={toggleSettingsDropdown}
                         >
                             Settings
@@ -112,9 +112,8 @@ const Navbar = () => {
                             </div>
                         )}
                     </div>
-                </div>
 
-                <div className="navbar-actions">
+                    {/* Theme Toggle Button */}
                     <button
                         className="theme-toggle-btn"
                         onClick={toggleTheme}
@@ -126,6 +125,7 @@ const Navbar = () => {
                         </div>
                     </button>
 
+                    {/* User Menu */}
                     {isAuthenticated && (
                         <div className="nav-dropdown" ref={userMenuRef}>
                             <button

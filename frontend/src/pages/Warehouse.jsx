@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 import { warehousesAPI } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 const Warehouse = () => {
   const [warehouses, setWarehouses] = useState([]);
@@ -12,9 +13,16 @@ const Warehouse = () => {
     address: "",
   });
 
+  const { isManager } = useAuth();
+
   useEffect(() => {
+    if (!isManager) {
+      setError("Access denied. Manager role required.");
+      setLoading(false);
+      return;
+    }
     fetchWarehouses();
-  }, []);
+  }, [isManager]);
 
   const fetchWarehouses = async () => {
     try {
@@ -50,7 +58,7 @@ const Warehouse = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this warehouse?")) return;
-    
+
     try {
       await warehousesAPI.delete(id);
       fetchWarehouses();
@@ -59,6 +67,23 @@ const Warehouse = () => {
       setError(err.message || "Failed to delete warehouse");
     }
   };
+
+  if (!isManager) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-primary)]">
+        <Navbar />
+        <div className="container-main section-spacing">
+          <div className="empty-state">
+            <div className="empty-state-icon">🔒</div>
+            <div className="empty-state-title">Access Denied</div>
+            <div className="empty-state-description">
+              Manager role required to access warehouse settings
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -137,7 +162,7 @@ const Warehouse = () => {
               {/* Warehouse List */}
               <div className="bg-[var(--bg-secondary)] p-6 rounded-lg shadow border border-[var(--border-color)]">
                 <h3 className="text-lg font-medium mb-4 text-[var(--text-secondary)]">Warehouse List</h3>
-                
+
                 {loading ? (
                   <p className="text-[var(--text-secondary)] text-center py-4">Loading warehouses...</p>
                 ) : warehouses.length === 0 ? (

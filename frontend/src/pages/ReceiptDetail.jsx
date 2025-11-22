@@ -78,7 +78,9 @@ const ReceiptDetail = () => {
         const badges = {
             'Draft': 'badge-neutral',
             'Counting': 'badge-warning',
-            'Done': 'badge-success'
+            'Done': 'badge-success',
+            'Validated': 'badge-info',
+            'Cancelled': 'badge-danger'
         };
         return badges[status] || 'badge-neutral';
     };
@@ -114,20 +116,22 @@ const ReceiptDetail = () => {
 
             <div className="container-main section-spacing">
                 {/* Header */}
-                <div className="flex items-start justify-between mb-6">
-                    <div>
-                        <button
-                            onClick={() => navigate('/operations/receipt')}
-                            className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] mb-2"
-                        >
-                            ← Back to Receipts
-                        </button>
-                        <h1 className="page-title">{receipt.refNo}</h1>
-                        <p className="page-description">Receipt Details</p>
+                <div className="page-header">
+                    <button
+                        onClick={() => navigate('/operations/receipt')}
+                        className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] mb-4 transition-colors duration-200"
+                    >
+                        ← Back to Receipts
+                    </button>
+                    <div className="flex items-start justify-between">
+                        <div>
+                            <h1 className="page-title">{receipt.refNo}</h1>
+                            <p className="page-description">Receipt Details and Product Lines</p>
+                        </div>
+                        <span className={`badge ${getStatusBadge(receipt.status)}`}>
+                            {receipt.status}
+                        </span>
                     </div>
-                    <span className={`badge ${getStatusBadge(receipt.status)}`}>
-                        {receipt.status}
-                    </span>
                 </div>
 
                 {error && (
@@ -217,33 +221,73 @@ const ReceiptDetail = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-3">
+                <div className="flex flex-col gap-4">
                     {receipt.status === 'Draft' && (
-                        <button
-                            onClick={handleStartCounting}
-                            disabled={processing}
-                            className="btn btn-primary"
-                        >
-                            {processing ? 'Processing...' : 'Start Counting'}
-                        </button>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleStartCounting}
+                                disabled={processing}
+                                className="btn btn-primary"
+                            >
+                                {processing ? (
+                                    <>
+                                        <span className="spinner w-5 h-5 border-2"></span>
+                                        Processing...
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>▶</span>
+                                        Start Counting
+                                    </>
+                                )}
+                            </button>
+                        </div>
                     )}
 
                     {receipt.status === 'Counting' && isManager && (
-                        <button
-                            onClick={handleValidate}
-                            disabled={processing}
-                            className="btn btn-success"
-                        >
-                            {processing ? 'Validating...' : 'Validate Receipt'}
-                        </button>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleValidate}
+                                disabled={processing}
+                                className="btn btn-primary"
+                                style={{
+                                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                                    boxShadow: '0 8px 24px 0 rgba(16, 185, 129, 0.35)'
+                                }}
+                            >
+                                {processing ? (
+                                    <>
+                                        <span className="spinner w-5 h-5 border-2"></span>
+                                        Validating...
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>✓</span>
+                                        Validate Receipt
+                                    </>
+                                )}
+                            </button>
+                        </div>
                     )}
 
                     {receipt.status === 'Done' && (
-                        <div className="card card-padding bg-green-50 border-green-200">
-                            <p className="text-green-800 font-medium">
-                                ✓ Receipt validated by {receipt.validatedBy?.name} on{' '}
-                                {new Date(receipt.validatedAt).toLocaleString()}
-                            </p>
+                        <div className="card card-padding-sm bg-green-50 border-l-4 border-green-500 animate-fade-in">
+                            <div className="flex items-start gap-3">
+                                <span className="text-2xl">✅</span>
+                                <div>
+                                    <p className="font-semibold text-green-800">Receipt Validated</p>
+                                    <p className="text-sm text-green-700 mt-1">
+                                        Validated by <span className="font-medium">{receipt.validatedBy?.name}</span> on{' '}
+                                        {new Date(receipt.validatedAt).toLocaleString('en-US', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

@@ -242,7 +242,7 @@ const DeliveryDetail = () => {
                         </button>
                     )}
 
-                    {delivery.status === 'Packed' && (
+                    {delivery.status === 'Packed' && isManager && (
                         <button
                             onClick={handleValidate}
                             disabled={processing}
