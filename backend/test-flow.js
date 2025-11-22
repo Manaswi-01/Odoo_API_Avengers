@@ -17,7 +17,51 @@ const runTest = async () => {
         });
         const token = userRes.data.token;
         const headers = { Authorization: `Bearer ${token}` };
+        const userEmail = userRes.data.email;
         console.log('✅ Signup Successful');
+
+        // 1.5 Test Forgot Password Flow
+        console.log('\n1.5. Testing Forgot Password...');
+
+        // A. Request OTP
+        const forgotRes = await axios.post(`${API_URL}/auth/forgot-password`, {
+            email: userEmail
+        });
+        const otp = forgotRes.data.otpDebug;
+        console.log('✅ OTP Received:', otp);
+
+        // B. Reset Password
+        await axios.post(`${API_URL}/auth/reset-password`, {
+            email: userEmail,
+            otp: otp,
+            newPassword: 'newpassword123'
+        });
+        console.log('✅ Password Reset Successful');
+
+        // C. Verify Old Password Fails
+        try {
+            await axios.post(`${API_URL}/auth/login`, {
+                email: userEmail,
+                password: 'password123'
+            });
+            throw new Error('Old password should not work');
+        } catch (err) {
+            if (err.response && err.response.status === 400) {
+                console.log('✅ Old Password Rejected');
+            } else {
+                throw err;
+            }
+        }
+
+        // D. Verify New Password Works
+        const loginRes = await axios.post(`${API_URL}/auth/login`, {
+            email: userEmail,
+            password: 'newpassword123'
+        });
+        // Update token for subsequent requests
+        const newToken = loginRes.data.token;
+        // headers.Authorization = `Bearer ${newToken}`; // Optional if we want to use new token
+        console.log('✅ Login with New Password Successful');
 
         // 2. Create Warehouse
         console.log('\n2. Testing Create Warehouse...');
