@@ -1,1 +1,90 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Light Theme Variables - Neat & Professional */
+    --bg-primary: #f8fafc;
+    /* Slate 50 */
+    --bg-secondary: #ffffff;
+    /* White */
+    --text-primary: #1e293b;
+    /* Slate 800 */
+    --text-secondary: #64748b;
+    /* Slate 500 */
+    --accent-color: #4f46e5;
+    /* Indigo 600 */
+    --accent-hover: #4338ca;
+    /* Indigo 700 */
+    --border-color: #e2e8f0;
+    /* Slate 200 */
+    --navbar-bg: rgba(255, 255, 255, 0.9);
+    --hover-bg: #f1f5f9;
+    /* Slate 100 */
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] {
+    /* Dark Theme Variables - Antigravity Blue (Deep Navy/Cyber) */
+    --bg-primary: #0b1121;
+    /* Deepest Navy */
+    --bg-secondary: #151e32;
+    /* Lighter Navy */
+    --text-primary: #e2e8f0;
+    /* Slate 200 */
+    --text-secondary: #94a3b8;
+    /* Slate 400 */
+    --accent-color: #38bdf8;
+    /* Sky Blue 400 */
+    --accent-hover: #0ea5e9;
+    /* Sky Blue 500 */
+    --border-color: #1e293b;
+    /* Slate 800 */
+    --navbar-bg: rgba(11, 17, 33, 0.85);
+    --hover-bg: #1e293b;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0;
+    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+/* Common Component Styles */
+.card {
+    background-color: var(--bg-secondary);
+    border-radius: 0.5rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
