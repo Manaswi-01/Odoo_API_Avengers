@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 import { useState } from "react";
 
 const Warehouse = () => {
@@ -32,65 +32,21 @@ const Warehouse = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold">Inventory Management</h1>
-              </div>
-              <nav className="ml-6 flex space-x-8">
-                <Link
-                  to="/dashboard"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  to="/operations"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Operations
-                </Link>
-                <Link
-                  to="/stocks"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Stocks
-                </Link>
-                <Link
-                  to="/move-history"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Move History
-                </Link>
-              </nav>
-            </div>
-            <div className="flex items-center">
-              <Link
-                to="/settings"
-                className="text-gray-500 hover:text-gray-700"
-              >
-                Settings
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <Navbar />
 
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <div className="border-4 border-dashed border-gray-200 rounded-lg p-8">
+          <div className="border-4 border-dashed border-[var(--border-color)] rounded-lg p-8">
             <h2 className="text-2xl font-bold mb-6">Warehouse Management</h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Add Warehouse Form */}
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-medium mb-4">Add New Warehouse</h3>
+              <div className="bg-[var(--bg-secondary)] p-6 rounded-lg shadow border border-[var(--border-color)]">
+                <h3 className="text-lg font-medium mb-4 text-[var(--text-secondary)]">Add New Warehouse</h3>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                       Name *
                     </label>
                     <input
@@ -99,13 +55,13 @@ const Warehouse = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-[var(--border-color)] rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-[var(--bg-primary)] text-[var(--text-primary)]"
                       placeholder="Enter warehouse name"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                       Short Code *
                     </label>
                     <input
@@ -114,13 +70,13 @@ const Warehouse = () => {
                       value={formData.shortCode}
                       onChange={handleChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-[var(--border-color)] rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-[var(--bg-primary)] text-[var(--text-primary)]"
                       placeholder="Enter short code"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
                       Address *
                     </label>
                     <textarea
@@ -129,14 +85,14 @@ const Warehouse = () => {
                       onChange={handleChange}
                       required
                       rows="3"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-[var(--border-color)] rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-[var(--bg-primary)] text-[var(--text-primary)]"
                       placeholder="Enter warehouse address"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                   >
                     Add Warehouse
                   </button>
@@ -144,10 +100,10 @@ const Warehouse = () => {
               </div>
 
               {/* Warehouse List */}
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-medium mb-4">Warehouse List</h3>
+              <div className="bg-[var(--bg-secondary)] p-6 rounded-lg shadow border border-[var(--border-color)]">
+                <h3 className="text-lg font-medium mb-4 text-[var(--text-secondary)]">Warehouse List</h3>
                 {warehouses.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4">
+                  <p className="text-[var(--text-secondary)] text-center py-4">
                     No warehouses added yet.
                   </p>
                 ) : (
@@ -155,23 +111,23 @@ const Warehouse = () => {
                     {warehouses.map((warehouse) => (
                       <div
                         key={warehouse.id}
-                        className="border border-gray-200 rounded-lg p-4"
+                        className="border border-[var(--border-color)] rounded-lg p-4 bg-[var(--bg-primary)]"
                       >
                         <div className="flex justify-between items-start">
                           <div>
-                            <h4 className="font-medium text-gray-900">
+                            <h4 className="font-medium text-[var(--text-primary)]">
                               {warehouse.name}
                             </h4>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-[var(--text-secondary)]">
                               Code: {warehouse.shortCode}
                             </p>
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-sm text-[var(--text-secondary)] mt-1">
                               {warehouse.address}
                             </p>
                           </div>
                           <button
                             onClick={() => handleDelete(warehouse.id)}
-                            className="text-red-600 hover:text-red-800 text-sm"
+                            className="text-red-600 hover:text-red-400 text-sm transition"
                           >
                             Delete
                           </button>
