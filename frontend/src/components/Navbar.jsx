@@ -7,15 +7,20 @@ const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
     const location = useLocation();
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const dropdownRef = useRef(null);
+    const [isOperationsOpen, setIsOperationsOpen] = useState(false);
+    const settingsRef = useRef(null);
+    const operationsRef = useRef(null);
 
     const isActive = (path) => location.pathname === path;
 
-    // Close dropdown when clicking outside
+    // Close dropdowns when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            if (settingsRef.current && !settingsRef.current.contains(event.target)) {
                 setIsSettingsOpen(false);
+            }
+            if (operationsRef.current && !operationsRef.current.contains(event.target)) {
+                setIsOperationsOpen(false);
             }
         };
 
@@ -28,11 +33,17 @@ const Navbar = () => {
     const toggleSettingsDropdown = (e) => {
         e.preventDefault();
         setIsSettingsOpen(!isSettingsOpen);
+        if (!isSettingsOpen) setIsOperationsOpen(false); // ensure only one open
     };
 
-    const closeDropdown = () => {
-        setIsSettingsOpen(false);
+    const toggleOperationsDropdown = (e) => {
+        e.preventDefault();
+        setIsOperationsOpen(!isOperationsOpen);
+        if (!isOperationsOpen) setIsSettingsOpen(false); // ensure only one open
     };
+
+    const closeSettingsDropdown = () => setIsSettingsOpen(false);
+    const closeOperationsDropdown = () => setIsOperationsOpen(false);
 
     return (
         <nav className="navbar">
@@ -43,12 +54,33 @@ const Navbar = () => {
 
                 <div className="navbar-links">
                     <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>Dashboard</Link>
-                    <Link to="/operations" className={`nav-link ${isActive('/operations') ? 'active' : ''}`}>Operations</Link>
+
+                    {/* Operations Dropdown (matches Settings style) */}
+                    <div className="nav-dropdown" ref={operationsRef}>
+                        <button
+                            className={`nav-link dropdown-toggle ${isActive('/operations') || isActive('/operations/receipt') || isActive('/operations/delivery') ? 'active' : ''}`}
+                            onClick={toggleOperationsDropdown}
+                        >
+                            Operations
+                            <span className={`dropdown-arrow ${isOperationsOpen ? 'open' : ''}`}>▼</span>
+                        </button>
+                        {isOperationsOpen && (
+                            <div className="dropdown-menu">
+                                <Link to="/operations/receipt" className="dropdown-item" onClick={closeOperationsDropdown}>
+                                    Receipt
+                                </Link>
+                                <Link to="/operations/delivery" className="dropdown-item" onClick={closeOperationsDropdown}>
+                                    Delivery
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+
                     <Link to="/stocks" className={`nav-link ${isActive('/stocks') ? 'active' : ''}`}>Stocks</Link>
                     <Link to="/move-history" className={`nav-link ${isActive('/move-history') ? 'active' : ''}`}>History</Link>
 
                     {/* Settings Dropdown */}
-                    <div className="nav-dropdown" ref={dropdownRef}>
+                    <div className="nav-dropdown" ref={settingsRef}>
                         <button
                             className={`nav-link dropdown-toggle ${isActive('/settings') || isActive('/location') || isActive('/warehouse') ? 'active' : ''}`}
                             onClick={toggleSettingsDropdown}
@@ -58,10 +90,10 @@ const Navbar = () => {
                         </button>
                         {isSettingsOpen && (
                             <div className="dropdown-menu">
-                                <Link to="/location" className="dropdown-item" onClick={closeDropdown}>
+                                <Link to="/location" className="dropdown-item" onClick={closeSettingsDropdown}>
                                     Location
                                 </Link>
-                                <Link to="/warehouse" className="dropdown-item" onClick={closeDropdown}>
+                                <Link to="/warehouse" className="dropdown-item" onClick={closeSettingsDropdown}>
                                     Warehouse
                                 </Link>
                             </div>

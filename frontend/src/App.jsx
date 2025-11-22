@@ -11,6 +11,9 @@ import Settings from "./pages/Settings";
 import Location from "./pages/Location";
 import Warehouse from "./pages/Warehouse";
 import { ThemeProvider } from "./context/ThemeContext";
+import ReceiptList from './pages/ReceiptList';
+import DeliveryList from './pages/DeliveryList';
+import NewReceipt from './pages/NewReceipt';
 
 function App() {
   return (
@@ -30,7 +33,11 @@ function App() {
               <Route path="/location" element={<Location />} />
               <Route path="/warehouse" element={<Warehouse />} />
               <Route path="/" element={<Dashboard />} />
-
+              <Route path="/operations/receipt" element={<ReceiptList />} />
+  <Route path="/operations/receipt/new" element={<NewReceipt />} />
+  <Route path="/operations/receipt/:id" element={<ReceiptList />} /> {/* optional detail route or make separate component */}
+  <Route path="/operations/delivery" element={<DeliveryList />} />
+  <Route path="/operations/delivery/:id" element={<DeliveryList />} />
 
             </Routes>
           </main>
