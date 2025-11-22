@@ -18,6 +18,7 @@ import ReceiptDetail from './pages/ReceiptDetail';
 import DeliveryList from './pages/DeliveryList';
 import DeliveryDetail from './pages/DeliveryDetail';
 import NewReceipt from './pages/NewReceipt';
+import NewDelivery from './pages/NewDelivery';
 import UserManagement from './pages/UserManagement';
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/operations/receipt/new" element={<ProtectedRoute><NewReceipt /></ProtectedRoute>} />
                 <Route path="/operations/receipt/:id" element={<ProtectedRoute><ReceiptDetail /></ProtectedRoute>} />
                 <Route path="/operations/delivery" element={<ProtectedRoute><DeliveryList /></ProtectedRoute>} />
+                <Route path="/operations/delivery/new" element={<ProtectedRoute><NewDelivery /></ProtectedRoute>} />
                 <Route path="/operations/delivery/:id" element={<ProtectedRoute><DeliveryDetail /></ProtectedRoute>} />
               </Routes>
             </main>
