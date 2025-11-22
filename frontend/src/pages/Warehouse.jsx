@@ -1,13 +1,33 @@
 import Navbar from "../components/Navbar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { warehousesAPI } from "../services/api";
 
 const Warehouse = () => {
   const [warehouses, setWarehouses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
-    shortCode: "",
+    code: "",
     address: "",
   });
+
+  useEffect(() => {
+    fetchWarehouses();
+  }, []);
+
+  const fetchWarehouses = async () => {
+    try {
+      setLoading(true);
+      const data = await warehousesAPI.getAll();
+      setWarehouses(data);
+      setError("");
+    } catch (err) {
+      setError(err.message || "Failed to fetch warehouses");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -16,19 +36,28 @@ const Warehouse = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newWarehouse = {
-      id: Date.now(),
-      ...formData,
-    };
-    setWarehouses([...warehouses, newWarehouse]);
-    setFormData({ name: "", shortCode: "", address: "" });
-    console.log("Warehouse added:", newWarehouse);
+    try {
+      await warehousesAPI.create(formData);
+      setFormData({ name: "", code: "", address: "" });
+      fetchWarehouses();
+      setError("");
+    } catch (err) {
+      setError(err.message || "Failed to create warehouse");
+    }
   };
 
-  const handleDelete = (id) => {
-    setWarehouses(warehouses.filter((wh) => wh.id !== id));
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this warehouse?")) return;
+    
+    try {
+      await warehousesAPI.delete(id);
+      fetchWarehouses();
+      setError("");
+    } catch (err) {
+      setError(err.message || "Failed to delete warehouse");
+    }
   };
 
   return (
@@ -39,6 +68,12 @@ const Warehouse = () => {
         <div className="px-4 py-6 sm:px-0">
           <div className="border-4 border-dashed border-[var(--border-color)] rounded-lg p-8">
             <h2 className="text-2xl font-bold mb-6">Warehouse Management</h2>
+
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {error}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Add Warehouse Form */}
@@ -62,16 +97,16 @@ const Warehouse = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
-                      Short Code *
+                      Code *
                     </label>
                     <input
                       type="text"
-                      name="shortCode"
-                      value={formData.shortCode}
+                      name="code"
+                      value={formData.code}
                       onChange={handleChange}
                       required
                       className="w-full px-3 py-2 border border-[var(--border-color)] rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-[var(--bg-primary)] text-[var(--text-primary)]"
-                      placeholder="Enter short code"
+                      placeholder="Enter warehouse code"
                     />
                   </div>
 
@@ -102,7 +137,10 @@ const Warehouse = () => {
               {/* Warehouse List */}
               <div className="bg-[var(--bg-secondary)] p-6 rounded-lg shadow border border-[var(--border-color)]">
                 <h3 className="text-lg font-medium mb-4 text-[var(--text-secondary)]">Warehouse List</h3>
-                {warehouses.length === 0 ? (
+                
+                {loading ? (
+                  <p className="text-[var(--text-secondary)] text-center py-4">Loading warehouses...</p>
+                ) : warehouses.length === 0 ? (
                   <p className="text-[var(--text-secondary)] text-center py-4">
                     No warehouses added yet.
                   </p>
@@ -110,7 +148,7 @@ const Warehouse = () => {
                   <div className="space-y-4">
                     {warehouses.map((warehouse) => (
                       <div
-                        key={warehouse.id}
+                        key={warehouse._id}
                         className="border border-[var(--border-color)] rounded-lg p-4 bg-[var(--bg-primary)]"
                       >
                         <div className="flex justify-between items-start">
@@ -119,14 +157,19 @@ const Warehouse = () => {
                               {warehouse.name}
                             </h4>
                             <p className="text-sm text-[var(--text-secondary)]">
-                              Code: {warehouse.shortCode}
+                              Code: {warehouse.code}
                             </p>
                             <p className="text-sm text-[var(--text-secondary)] mt-1">
-                              {warehouse.address}
+                              {warehouse.address || 'No address provided'}
                             </p>
+                            {warehouse.locations && warehouse.locations.length > 0 && (
+                              <p className="text-sm text-[var(--text-secondary)] mt-1">
+                                Locations: {warehouse.locations.length}
+                              </p>
+                            )}
                           </div>
                           <button
-                            onClick={() => handleDelete(warehouse.id)}
+                            onClick={() => handleDelete(warehouse._id)}
                             className="text-red-600 hover:text-red-400 text-sm transition"
                           >
                             Delete

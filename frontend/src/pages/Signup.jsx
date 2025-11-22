@@ -1,6 +1,8 @@
 import Navbar from "../components/Navbar";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { authAPI } from "../services/api";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -8,19 +10,56 @@ const Signup = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "User"
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Signup data:", formData);
-    // Add your signup logic here
+    setLoading(true);
+    setError("");
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await authAPI.signup(
+        formData.name,
+        formData.email,
+        formData.password,
+        formData.role
+      );
+      
+      // Store user data and token
+      const userData = {
+        _id: response._id,
+        name: response.name,
+        email: response.email,
+        role: response.role
+      };
+      
+      login(userData, response.token);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.message || "Signup failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,6 +72,13 @@ const Signup = () => {
               Create your account
             </h2>
           </div>
+          
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+              {error}
+            </div>
+          )}
+          
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="rounded-md shadow-sm space-y-4">
               <div>
@@ -79,14 +125,28 @@ const Signup = () => {
                   onChange={handleChange}
                 />
               </div>
+              <div>
+                <select
+                  name="role"
+                  required
+                  className="appearance-none rounded relative block w-full px-3 py-2 border border-[var(--border-color)] text-[var(--text-primary)] bg-[var(--bg-secondary)] rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  value={formData.role}
+                  onChange={handleChange}
+                >
+                  <option value="User">User</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </div>
             </div>
 
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+                disabled={loading}
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Sign up
+                {loading ? "Creating account..." : "Sign up"}
               </button>
             </div>
 

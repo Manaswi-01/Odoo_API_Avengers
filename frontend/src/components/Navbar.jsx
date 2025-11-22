@@ -1,17 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css'; // We'll create this for specific animations
 
 const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
+    const { isAuthenticated, logout, user } = useAuth();
     const location = useLocation();
+    const navigate = useNavigate();
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isOperationsOpen, setIsOperationsOpen] = useState(false);
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const settingsRef = useRef(null);
     const operationsRef = useRef(null);
+    const userMenuRef = useRef(null);
 
     const isActive = (path) => location.pathname === path;
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
 
     // Close dropdowns when clicking outside
     useEffect(() => {
@@ -21,6 +31,9 @@ const Navbar = () => {
             }
             if (operationsRef.current && !operationsRef.current.contains(event.target)) {
                 setIsOperationsOpen(false);
+            }
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+                setIsUserMenuOpen(false);
             }
         };
 
@@ -101,16 +114,43 @@ const Navbar = () => {
                     </div>
                 </div>
 
-                <button
-                    className="theme-toggle-btn"
-                    onClick={toggleTheme}
-                    aria-label="Toggle Theme"
-                >
-                    <div className={`toggle-icon ${theme}`}>
-                        <div className="shape-center"></div>
-                        <div className="shape-rays"></div>
-                    </div>
-                </button>
+                <div className="navbar-actions">
+                    <button
+                        className="theme-toggle-btn"
+                        onClick={toggleTheme}
+                        aria-label="Toggle Theme"
+                    >
+                        <div className={`toggle-icon ${theme}`}>
+                            <div className="shape-center"></div>
+                            <div className="shape-rays"></div>
+                        </div>
+                    </button>
+
+                    {isAuthenticated && (
+                        <div className="nav-dropdown" ref={userMenuRef}>
+                            <button
+                                className="nav-link user-menu-toggle"
+                                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                            >
+                                <span className="user-icon">👤</span>
+                                {user?.name}
+                                <span className={`dropdown-arrow ${isUserMenuOpen ? 'open' : ''}`}>▼</span>
+                            </button>
+                            {isUserMenuOpen && (
+                                <div className="dropdown-menu user-menu">
+                                    <div className="dropdown-item user-info">
+                                        <div className="user-email">{user?.email}</div>
+                                        <div className="user-role">{user?.role}</div>
+                                    </div>
+                                    <div className="dropdown-divider"></div>
+                                    <button className="dropdown-item logout-btn" onClick={handleLogout}>
+                                        Logout
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
         </nav>
     );

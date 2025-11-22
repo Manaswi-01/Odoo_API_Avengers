@@ -19,6 +19,7 @@ app.use('/api/warehouses', require('./src/routes/warehouseRoutes'));
 app.use('/api/partners', require('./src/routes/partnerRoutes'));
 app.use('/api/transactions', require('./src/routes/transactionRoutes'));
 app.use('/api/dashboard', require('./src/routes/dashboardRoutes'));
+app.use('/api/stock', require('./src/routes/stockRoutes'));
 
 app.get('/', (req, res) => {
     res.send('IMS Backend is running');
