@@ -129,7 +129,7 @@ A complete, modern Inventory Management System built with React, Node.js, Expres
 ## 🎯 Key Features
 
 ### Authentication
-- User signup with role selection (User, Manager, Admin)
+- User signup with secure registration
 - Secure login with JWT tokens
 - OTP-based password reset via email
 - Protected routes with automatic redirect

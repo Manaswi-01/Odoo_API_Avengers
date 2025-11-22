@@ -40,8 +40,7 @@ const seedData = async () => {
             user = await User.create({
                 name: 'Admin User',
                 email: 'admin@stockmaster.com',
-                passwordHash: hashedPassword,
-                role: 'Admin'
+                passwordHash: hashedPassword
             });
             console.log('✅ Admin user created (email: admin@stockmaster.com, password: admin123)\n');
         }

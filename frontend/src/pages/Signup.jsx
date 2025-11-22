@@ -9,8 +9,7 @@ const Signup = () => {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
-    role: "User"
+    confirmPassword: ""
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,16 +40,14 @@ const Signup = () => {
       const response = await authAPI.signup(
         formData.name,
         formData.email,
-        formData.password,
-        formData.role
+        formData.password
       );
       
       // Store user data and token
       const userData = {
         _id: response._id,
         name: response.name,
-        email: response.email,
-        role: response.role
+        email: response.email
       };
       
       login(userData, response.token);
@@ -124,19 +121,6 @@ const Signup = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                 />
-              </div>
-              <div>
-                <select
-                  name="role"
-                  required
-                  className="appearance-none rounded relative block w-full px-3 py-2 border border-[var(--border-color)] text-[var(--text-primary)] bg-[var(--bg-secondary)] rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  value={formData.role}
-                  onChange={handleChange}
-                >
-                  <option value="User">User</option>
-                  <option value="Manager">Manager</option>
-                  <option value="Admin">Admin</option>
-                </select>
               </div>
             </div>
 

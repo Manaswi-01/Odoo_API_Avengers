@@ -12,8 +12,7 @@ const runTest = async () => {
         const userRes = await axios.post(`${API_URL}/auth/signup`, {
             name: 'Test Manager',
             email: `manager_${Date.now()}@test.com`,
-            password: 'password123',
-            role: 'InventoryManager'
+            password: 'password123'
         });
         const token = userRes.data.token;
         const headers = { Authorization: `Bearer ${token}` };

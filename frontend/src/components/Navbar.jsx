@@ -140,7 +140,6 @@ const Navbar = () => {
                                 <div className="dropdown-menu user-menu">
                                     <div className="dropdown-item user-info">
                                         <div className="user-email">{user?.email}</div>
-                                        <div className="user-role">{user?.role}</div>
                                     </div>
                                     <div className="dropdown-divider"></div>
                                     <button className="dropdown-item logout-btn" onClick={handleLogout}>

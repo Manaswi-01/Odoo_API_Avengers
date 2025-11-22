@@ -13,8 +13,7 @@ const triggerOTP = async () => {
             await axios.post(`${API_URL}/auth/signup`, {
                 name: 'Ronit Sahoo',
                 email: TARGET_EMAIL,
-                password: 'password123',
-                role: 'InventoryManager'
+                password: 'password123'
             });
             console.log('✅ User created successfully.');
         } catch (error) {

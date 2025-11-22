@@ -18,8 +18,7 @@ async function testIntegration() {
         const signupData = {
             name: 'Test User',
             email: `test${Date.now()}@example.com`,
-            password: 'password123',
-            role: 'User'
+            password: 'password123'
         };
         
         const signupResponse = await axios.post(`${BASE_URL}/auth/signup`, signupData);
@@ -39,7 +38,6 @@ async function testIntegration() {
         });
         console.log('✅ Login successful');
         console.log('User:', loginResponse.data.name);
-        console.log('Role:', loginResponse.data.role);
         console.log('');
 
         // Test 4: Get User Info (Protected Route)

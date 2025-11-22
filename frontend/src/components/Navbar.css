@@ -251,14 +251,6 @@
   font-size: 0.875rem;
   color: var(--text-primary);
   font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.user-role {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .dropdown-divider {
